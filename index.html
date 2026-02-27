@@ -3,204 +3,337 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport"
-            content="width=device-width,
-                    initial-scale=1.0">
+            content="width=device-width, initial-scale=1.0">
         <title>
-            Configurador ERP - E.A.R.O Studios
+            Configurador Personalizado ERP - E.A.R.O Studios
         </title>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js">
-        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <style>
+            /* TEMA OSCURO (Por defecto, basado en tus pinceles de Avalonia) */
+            :root
+            {
+                --bg-gradient: linear-gradient(
+                    135deg,
+                    #111214 0%,
+                    #151E3E 100%
+                );
+                --text-color: #FFFFFF;
+                --card-bg: rgba( 255, 255, 255, 0.05 );
+                --accent: #3498db;
+            }
+
+            /* TEMA CLARO (Opcional, se puede alternar con una clase) */
+            body.light-theme
+            {
+                --bg-gradient: linear-gradient(
+                    135deg,
+                    #F2F2F2 0%,
+                    #CCCCCC 100%
+                );
+                --text-color: #000000;
+                --card-bg: rgba( 0, 0, 0, 0.05 );
+            }
+
             body
             {
+                background: var(--bg-gradient);
+                background-attachment: fixed;
+                color: var(--text-color);
                 font-family:
                     'Segoe UI',
-                    Tahoma,
-                    Geneva,
-                    Verdana,
                     sans-serif;
-                line-height: 1.6;
-                color: #333333;
-                max-width: 800px;
-                margin: 0 auto;
+                margin: 0;
                 padding: 20px;
-                background-color: #f4f7f6;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
-            h1
+
+            /* LOGO CENTRADO */
+            .logo-container
             {
-                color: #2c3e50;
+                margin-bottom: 30px;
                 text-align: center;
-                border-bottom: 2px solid #3498db;
-                padding-bottom: 10px;
             }
-                .module-card
-                {
-                    background: #ffffff;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    margin-bottom: 20px;
-                    padding: 15px;
-                }
-                .module-title
-                {
-                    font-weight: bold;
-                    font-size: 1.2em;
-                    color: #2980b9;
-                    margin-bottom: 10px;
-                    display: block;
-                }
-                .option-item
-                {
-                    margin-left: 15px;
-                    margin-bottom: 8px;
-                }
-                .description
-                {
-                    display: none;
-                    background: #ebf5fb;
-                    border-left: 4px solid #3498db;
-                    padding: 10px;
-                    margin: 5px 0 10px 25px;
-                    font-size: 0.9em;
-                    border-radius: 0 5px 5px 0;
-                }
+            .logo-container img
+            {
+                /* AJUSTA AQUÍ LOS PÍXELES QUE NECESITES */
+                width: 200px; 
+                height: auto;
+                object-fit: contain;
+            }
+
+            .container
+            {
+                width: 100%;
+                max-width: 900px;
+            }
+
+            .module-group {
+                background: var(--card-bg);
+                border: 1px solid rgba( 255,255,255,0.1 );
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 15px;
+                backdrop-filter: blur(5px);
+            }
+
+            .parent-option
+            {
+                font-size: 1.2em;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            .child-options
+            {
+                margin-left: 35px;
+                display: none;
+                margin-top: 10px;
+                border-left: 2px dotted var(--accent);
+                padding-left: 15px;
+            }
+            
+            .sub-item
+            {
+                margin-bottom: 8px;
+            }
+            
+            .description
+            {
+                display: none;
+                font-size: 0.85em;
+                color: #bdc3c7;
+                background: rgba(0,0,0,0.2);
+                padding: 8px;
+                margin-top: 5px;
+                border-radius: 4px;
+            }
+
             input[type="checkbox"]
             {
-                transform: scale(1.2);
-                margin-right: 8px;
                 cursor: pointer;
+                margin-right: 10px;
             }
-                .qty-input
-                {
-                    width: 50px;
-                    padding: 3px;
-                    border: 1px solid #cccccc;
-                    border-radius: 4px;
-                    margin-left: 10px;
-                }
-                .footer-btn
-                {
-                    text-align: center;
-                    margin-top: 30px;
-                }
-            button
+            .qty-input
             {
-                background-color: #27ae60;
-                color: white;
-                border: none;
-                padding: 12px 30px;
-                font-size: 1em;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: 0.3s;
+                background: transparent;
+                border: 1px solid var(--text-color);
+                color: var(--text-color);
+                width: 80px;
+                border-radius: 3px;
+                margin-left: 10px;
+                padding: 2px 5px;
             }
-                button:hover
-                {
-                    background-color: #219150;
-                }
+
+            .theme-toggle
+            {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                padding: 10px;
+                cursor: pointer;
+                background: var(--accent);
+                border: none;
+                color: white;
+                border-radius: 5px;
+            }
         </style>
     </head>
     <body>
-        <h1>
-            Configuración de Módulos ERP
-        </h1>
-        <p style="text-align: center;">
-            Seleccione las funciones requeridas para su implementación personalizada.
-        </p>
 
-        <form id="erpForm">
-            <div class="module-card">
-                <span class="module-title">
-                    ● Ventas
-                </span>
-                <div class="option-item">
-                    <input type="checkbox"
-                        id="v_fact"
-                        name="opt">
-                        <label for="v_fact">
-                            Facturación (Borradores, Gastos, Descuentos)
-                        </label>
-                    <div class="description">
-                        Gestión completa de comprobantes fiscales, control de compra mínima y registro de gastos operativos.
-                    </div>
-                </div>
-                <div class="option-item">
-                    <input type="checkbox"
-                        id="v_caja"
-                        name="opt">
-                        <label for="v_caja">
-                            Cajero y Cobro
-                        </label>
-                    <div class="description">
-                        Módulo rápido para punto de venta y procesamiento de cobros en mostrador.
-                    </div>
-                </div>
-            </div>
+        <button class="theme-toggle"
+                onclick="document.body.classList.toggle('light-theme')">
+            Cambiar Tema
+        </button>
 
-            <div class="module-card">
-                <span class="module-title">
-                    ● Caja y Analítica
-                </span>
-                <div class="option-item">
-                    <input type="checkbox"
-                           id="c_kpi"
-                           name="opt">
-                        <label for="c_kpi">
-                            KPIs e Indicadores
-                        </label> 
-                    <input type="number"
-                           class="qty-input"
-                           placeholder="Cantidad">
-                    <div class="description">
-                        Tablero con indicadores clave de rendimiento (ventas diarias, ticket promedio, etc.).
-                    </div>
-                </div>
-                <div class="option-item">
-                    <input type="checkbox"
-                           id="c_graf"
-                           name="opt">
-                        <label for="c_graf">
-                            Gráficos (Barras y Pie)
-                        </label>
-                    <input type="number"
-                           class="qty-input"
-                           placeholder="Cant.">
-                    <div class="description">
-                        Visualización estadística de datos para toma de decisiones.
-                    </div>
-                </div>
-            </div>
+        <div class="logo-container">
+            <img src="logo.png"
+                alt="E.A.R.O Studios Logo">
+        </div>
 
-            <div class="module-card">
-                <span class="module-title">
-                    ● Conectividad
-                </span>
-                <div class="option-item">
-                    <input type="checkbox"
-                           id="m_hibrido"
-                           name="opt">
-                        <label for="m_hibrido">
-                            Modo Híbrido (Online/Offline)
-                        </label>
+        <div class="container">
+            <form id="erp-form">
+                <div class="module-group">
+                    <div class="parent-option">
+                        <input type="checkbox"
+                            class="parent-check"
+                            id="m-ventas">
+                            <label for="m-ventas">
+                                Ventas
+                            </label>
+                    </div>
                     <div class="description">
-                        Permite trabajar en LAN (sin internet) dentro del local y sincronizar con la nube vía Wi-Fi para acceso internacional.
+                        Gestión integral del ciclo de ventas y cobros.
+                    </div>
+                    
+                    <div class="child-options"
+                        id="child-m-ventas">
+                        <div class="sub-item">
+                            <input type="checkbox"
+                                id="v-fact">
+                            <label for="v-fact">
+                                Facturación
+                            </label>
+                            <div class="description">
+                                Incluye Borradores, Compra Mínima y Gastos.
+                            </div>
+                        </div>
+                        <div class="sub-item">
+                            <input type="checkbox"
+                                   id="v-cajero">
+                                <label for="v-cajero">
+                                    Cajero (Cobro)
+                                </label>
+                            <div class="description">
+                                Interfaz para punto de venta rápido.
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="footer-btn">
-                <button type="button" onclick="window.print()">
-                    Generar PDF para enviar a E.A.R.O Studios
-                </button>
-            </div>
-        </form>
+                <div class="module-group">
+                    <div class="parent-option">
+                        <input type="checkbox"
+                               class="parent-check"
+                               id="m-caja">
+                            <label for="m-caja">
+                                Caja
+                            </label>
+                    </div>
+                    <div class="description">
+                        Análisis de flujo y KPIs de negocio.
+                    </div>
+                    
+                    <div class="child-options"
+                         id="child-m-caja">
+                        <div class="sub-item">
+                            <input type="checkbox"
+                                   id="c-kpi">
+                                <label for="c-kpi">
+                                    KPIs
+                                </label> 
+                            <input type="number"
+                                   class="qty-input"
+                                   placeholder="Cantidad">
+                            <div class="description">
+                                Indicadores clave de desempeño.
+                            </div>
+                        </div>
+                        <div class="sub-item">
+                            <input type="checkbox"
+                                   id="c-pie">
+                                <label for="c-pie">
+                                    Gráfico Circular "Pie"
+                                </label>
+                            <input type="number"
+                                   class="qty-input"
+                                   placeholder="Cantidad">
+                            <div class="description">
+                                Distribución porcentual de métricas.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-group">
+                    <div class="parent-option">
+                        <input type="checkbox"
+                               id="msg-interna">
+                            <label for="msg-interna">
+                                Mensajería interna ERP
+                            </label>
+                    </div>
+                    <div class="description">
+                        Chat privado entre empleados y sucursales.
+                    </div>
+
+                    <div class="parent-option">
+                        <input type="checkbox"
+                               id="modo-online">
+                            <label for="modo-online">
+                                Modo Online
+                            </label>
+                    </div>
+                    <div class="description">
+                        Wi-Fi internacional y soporte LAN Offline para local.
+                    </div>
+
+                    <div class="parent-option">
+                        <input type="checkbox"
+                               id="reci-codigos">
+                            <label for="reci-codigos">
+                                Reciclaje de Códigos
+                            </label>
+                    </div>
+                    <div class="description">
+                        Optimización de BD mediante reutilización de registros.
+                    </div>
+                </div>
+
+            </form>
+        </div>
 
         <script>
-            $(document).ready(function() {
-                $('input[type="checkbox"]').on('change', function() {
-                    $(this).siblings('.description').slideToggle(200);
-                });
-            });
+            $(document).ready(
+                function()
+                {
+                    // Lógica para desplegar descripción de cualquier checkbox
+                    $('input[type="checkbox"]').on(
+                        'change',
+                        function()
+                        {
+                            let desc = $(this).siblings(
+                                '.description'
+                            );
+                            if(
+                                $(this).is(
+                                ':checked'
+                                )
+                            )
+                            {
+                                desc.slideDown(200);
+                            }
+                            
+                            else
+                            {
+                                desc.slideUp(200);
+                            }
+                        }
+                    );
+
+                    // Lógica para desplegar sub-opciones solo cuando el padre está activo
+                    $('.parent-check').on(
+                        'change',
+                        function()
+                        {
+                            let childDiv = $(
+                                '#child-' + $(this).attr('id')
+                            );
+                            
+                            if(
+                                $(this).is(':checked')
+                            )
+                            {
+                                childDiv.slideDown(300);
+                            }
+                            
+                            else
+                            {
+                                childDiv.slideUp(300);
+                                // Opcional: desmarcar hijos si el padre se desmarca
+                                childDiv.find('input')
+                                        .prop(
+                                            'checked',
+                                            false
+                                        )
+                                        .trigger('change');
+                            }
+                        }
+                    );
+                }
+            );
         </script>
     </body>
 </html>
